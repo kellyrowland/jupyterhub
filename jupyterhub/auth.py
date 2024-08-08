@@ -705,7 +705,7 @@ class Authenticator(LoggingConfigurable):
             self.log.warning("User %r blocked. Stop authentication", username)
             return
 
-        self.lod.debug("logging authenticated var")
+        self.log.debug("logging authenticated var")
         self.log.debug(authenticated)
 
         allowed_pass = self.allow_all
