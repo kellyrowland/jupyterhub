@@ -705,13 +705,18 @@ class Authenticator(LoggingConfigurable):
             self.log.warning("User %r blocked. Stop authentication", username)
             return
 
+        self.lod.debug("logging authenticated var")
+        self.log.debug(authenticated)
+
         allowed_pass = self.allow_all
         if not allowed_pass:
+            self.log.debug("not allowed_pass, await check_allowed")
             allowed_pass = await maybe_future(
                 self.check_allowed(username, authenticated)
             )
 
         if allowed_pass:
+            self.log.debug("allowed_pass, check admin")
             if authenticated['admin'] is None:
                 authenticated['admin'] = await maybe_future(
                     self.is_admin(handler, authenticated)
