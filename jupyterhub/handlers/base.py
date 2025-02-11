@@ -1296,11 +1296,14 @@ class BaseHandler(RequestHandler):
             PROXY_DELETE_DURATION_SECONDS.labels(
                 status=ProxyDeleteStatus.success
             ).observe(time.perf_counter() - proxy_deletion_start_time)
-        except Exception:
+        except Exception as e:
             PROXY_DELETE_DURATION_SECONDS.labels(
                 status=ProxyDeleteStatus.failure
             ).observe(time.perf_counter() - proxy_deletion_start_time)
-            raise
+            self.log.warning(
+                "Route removal encountered an exception for user %s - %s", user.name, e
+            )
+            #raise
 
         await user.stop(server_name)
 
